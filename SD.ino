@@ -9,10 +9,20 @@ bool fileExists( fs::FS &fs, const char * path ){
   return true;
 }
 
-void fileNameFromNumber(char *str, int number){
-  char out[12];
-  sprintf(out, "/%d.jpg", number);
-  str = out;
+void fileNameFromNumber(int number){
+  //next_filename = "0000000.jpg";
+
+  int place = 1;
+  int position = 6;
+  while(number > 0){
+    int value = ( number % (place * 10) );
+    int digit = value / place;
+    next_filename[position] = digit + 48;
+    number = number - value;
+    place = place * 10;
+    position = position - 1;
+  }
+
 }
 
 void readFile(fs::FS &fs, const char * path){
@@ -73,5 +83,6 @@ void miniSDTest(){
   
   writeFile(SD, "/card_test.txt", "Ok");
   readFile(SD, "/card_test.txt");
-  deleteFile(SD, "/card_test.txt");
+  tPrintln("");
+  //deleteFile(SD, "/card_test.txt");
 }

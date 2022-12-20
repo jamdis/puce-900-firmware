@@ -1,6 +1,6 @@
 //--------------------------Config------------------------------------
 #define SCREEN_ROTATION    1
-#define SENSOR_ROTATION    3
+#define SENSOR_ROTATION    0
 #define SHUTTER_COOLDOWN   500
 
 

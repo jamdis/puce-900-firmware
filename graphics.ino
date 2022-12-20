@@ -16,7 +16,7 @@ void drawFrameToScreen(){
   for(int x = 0; x < ADNS3080_PIXELS_X; x += 1 ) {
     for(int y = 0; y < ADNS3080_PIXELS_Y; y += 1 ) {
       uint8_t pix_value = frame[x][y];
-      pucePixel(x,y,frame[x][y],4);
+      pucePixel(ADNS3080_PIXELS_X - x - 1,y,frame[x][y],4); //flipping horizontally for the screen.  TODO: fix this for real.
     }
   }
 }

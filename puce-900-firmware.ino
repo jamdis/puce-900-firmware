@@ -13,8 +13,9 @@ struct user_input {
   uint exposure_pot;
   uint shutter_count;
 };
-user_input ui = {0,0,0,0,0,1};
+user_input ui = {0,0,0,0,0,0};
 
+char next_filename[12] = "/000000.jpg";
 
 //------------------Setup---------------------------
 
@@ -27,15 +28,11 @@ void setup() {
   tft.println("_Puce 900_");
   sensorInit();//initialise sensor
   miniSDTest();//test the SD card
-  char file_name[12];
-  fileNameFromNumber(file_name, ui.shutter_count);
-  Serial.print("fn: ");
-  Serial.println(file_name);
-  while ( fileExists(SD, file_name ) ){
-    ui.shutter_count ++;
-    //fn = fileNameFromNumber(ui.shutter_count);
-  }
-  delay(1000);
+  
+  tPrint(next_filename);
+
+
+  delay(10000);
 
   //
 
@@ -61,13 +58,13 @@ void loop() {
   //----OUTPUT-----
   if( getShutterButton() ){
     //shutter has been pressed. Save JPEG to the SD card
-    char file_name[12];
-    fileNameFromNumber(file_name, ui.shutter_count);
-    while ( fileExists(SD, file_name ) ){
+
+    fileNameFromNumber(ui.shutter_count);
+    while( fileExists( SD, next_filename )){ //check for next available filename
       ui.shutter_count ++;
-      fileNameFromNumber(file_name, ui.shutter_count);
-    }
-    saveFrame(frame, file_name ); 
+      fileNameFromNumber(ui.shutter_count);
+    }     
+    saveFrame(frame, next_filename );
   }
   
 

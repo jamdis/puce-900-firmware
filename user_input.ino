@@ -1,10 +1,10 @@
 void initUserInput(){
-  pinMode( AE_SWITCH, INPUT_PULLUP );
+  pinMode( ME_SWITCH, INPUT_PULLUP );
   pinMode(SHUTTER_BUTTON, INPUT_PULLUP );
 }
 
 void updateUserInput(){
-  ui.ae_switch = digitalRead( AE_SWITCH );
+  ui.me_switch = digitalRead( ME_SWITCH ); //what does the ME switch say?
   ui.shutter_button_down = !digitalRead( SHUTTER_BUTTON ) ; //invert input because pullup.
   ui.shutter_button_pressed = false;
   if( ui.shutter_button_down && millis() > ui.shutter_ready_at){
@@ -16,8 +16,8 @@ void updateUserInput(){
 
 }
 
-bool getAeSwitch(){
-  return ui.ae_switch;
+bool getMeSwitch(){
+  return ui.me_switch;
 }
 
 bool getShutterButton(){

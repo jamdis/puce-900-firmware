@@ -26,13 +26,22 @@ void drawHud(){
   int old_cursor_y = tft.getCursorY();
   
   tft.setCursor(121,20);
-  tft.print("AE:");
-  if( getAeSwitch() ){
+  tft.print("ME:");
+  if( getMeSwitch() ){
     tft.write(0x18);
   }
   else{
     tft.write(0x19);
   }
+
+  if( ss.manual_exposure ){
+    tft.write(0x18);
+  }
+  else{
+    tft.write(0x19);
+  }
+
+
   tft.setCursor(121,28);
   tft.print("Sh:");
   if( getShutterButton() ){

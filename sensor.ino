@@ -3,10 +3,10 @@ void sensorInit(){
     bool id_test = sensor.testProductID();
     uint8_t rev_id = sensor.getRevisionID();
   if( sensor_ok ){
-    tPrint("Sensor OK.");
+    tPrintln("Sensor OK.");
   }
   else{
-    tPrint("Sensor NOT OK.");
+    tPrintln("Sensor NOT OK.");
   }
 
   if( id_test ){
@@ -17,8 +17,8 @@ void sensorInit(){
   }
   tPrint( " rev: " );
   tPrintln( sensor.getRevisionID() );
-
-  sensor.setExposure(false, false, 0x2EE0, 0x7E0E, 0x8C20);
+  sensor.setFramePeriodMaxBound(0x12C0);
+  //sensor.setExposure(true, true, 0x2EE0, 0x7E0E, 0x8C20);
 }
 
 void readySensor(){
@@ -52,4 +52,35 @@ void rotateClockWise(uint8_t arr[ADNS3080_PIXELS_X][ADNS3080_PIXELS_X]){
          arr[ADNS3080_PIXELS_X - 1 - i][j] = ptr;
       }
    }
+}
+
+
+void updateSensorStatus(){
+  //update global vars from acutal info from sensor
+  ss.manual_exposure = sensor.getManualShutter();
+  ss.shutter = sensor.getShutter();
+  ss.suttter_max_bound = sensor.getShutterMaxBound();
+}
+
+void compareAndChangeSensor(){
+  // if (ss.manual_exposure != ui.me_switch){
+  //   sensor.setManualShutter(ui.me_switch);
+  // }
+
+  uint16_t new_max_shutter;
+  //'max_shutter' is the max in auto mode, but the actual shutter speed when in manual.
+  //We set it to 0xFFFF here because we want to default to the slowest speed possible.
+  if(ui.me_switch){
+    new_max_shutter = map(ui.exposure_pot, 0, 0xFFF, 0, 0xFFFF);
+  }
+  else{
+    new_max_shutter = 0xFFFF;
+  }
+
+  //sensor.setExposure(true,ui.me_switch,0x2EE0, 0x0B55, new_max_shutter);
+  
+
+  //sensor.setManualShutter(ui.me_switch);
+  //sensor.setExposure(bool manual_fp, bool manual_shutter, uint16_t frame_period_max, uint16_t frame_period_min, uint16_t shutter_max)
+
 }

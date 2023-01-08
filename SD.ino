@@ -1,3 +1,11 @@
+void nextAvailableFileName(){
+  fileNameFromNumber(ui.shutter_count);
+    while( fileExists( SD, next_filename )){ //check for next available filename
+      ui.shutter_count ++;
+      fileNameFromNumber(ui.shutter_count);
+    }    
+}
+
 bool fileExists( fs::FS &fs, const char * path ){
   File file = fs.open(path);
   Serial.print( path );

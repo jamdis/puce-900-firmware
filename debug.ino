@@ -1,4 +1,4 @@
-void tPrint(char* message ){
+  void tPrint(char* message ){
   Serial.print(message);
   tft.print(message);
 }
@@ -35,6 +35,7 @@ void exposureDump(){
   //dump registers relating to exposure
   unsigned long t = millis();
   dumpVar("ext_config", sensor.getExtConfig(), BIN);
+  dumpVar("busy", sensor.getBusy() );
   dumpVar("manual_fr", sensor.getManualFrameRate());
   dumpVar("manual_shut", sensor.getManualShutter());
   dumpVar("fp", sensor.getFramePeriod(), HEX );

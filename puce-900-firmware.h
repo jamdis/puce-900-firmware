@@ -20,7 +20,7 @@
 #define TFT_DC             2
 #define ADNS_PIN_RESET     13        
 #define ADNS_PIN_CS        4
-#define AE_SWITCH          32
+#define ME_SWITCH          32
 #define SHUTTER_BUTTON     34
 #define EXPOSURE_POT       35
 

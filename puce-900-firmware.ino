@@ -6,16 +6,25 @@
 uint8_t frame[ADNS3080_PIXELS_X][ADNS3080_PIXELS_Y]; //2d array that will hold pixel data
 
 struct user_input {
-  bool ae_switch;
+  bool me_switch;
   bool shutter_button_down;
   bool shutter_button_pressed;
   unsigned long shutter_ready_at;
   uint exposure_pot;
   uint shutter_count;
 };
-user_input ui = {0,0,0,0,0,0};
+user_input ui = {0,0,0,0,0,1};
 
-char next_filename[12] = "/000000.jpg";
+struct sensor_status{
+  bool manual_exposure;
+  uint16_t shutter;
+  uint16_t suttter_max_bound;
+};
+sensor_status ss = { false, 0, 0 };
+
+
+
+char next_filename[12] = "/000001.jpg";
 
 //------------------Setup---------------------------
 
@@ -28,11 +37,11 @@ void setup() {
   tft.println("_Puce 900_");
   sensorInit();//initialise sensor
   miniSDTest();//test the SD card
-  
+  nextAvailableFileName(); //find the next filename
   tPrint(next_filename);
 
 
-  delay(10000);
+  delay(2000);
 
   //
 
@@ -46,8 +55,13 @@ void loop() {
 
   //----Sensor-----
   readySensor();
+  updateSensorStatus(); //get status from the sensor
+  
+  //change settings on the sensor
+  exposureDump();
   sensor.frameCapture( frame ); // dump frame from sensor
   rotateFrame( SENSOR_ROTATION );
+  compareAndChangeSensor();//compare current status to user input
   
   //----TFT--------
   //draw frame to screen
@@ -59,13 +73,11 @@ void loop() {
   if( getShutterButton() ){
     //shutter has been pressed. Save JPEG to the SD card
 
-    fileNameFromNumber(ui.shutter_count);
-    while( fileExists( SD, next_filename )){ //check for next available filename
-      ui.shutter_count ++;
-      fileNameFromNumber(ui.shutter_count);
-    }     
+    nextAvailableFileName(); //find the next available filename  
     saveFrame(frame, next_filename );
   }
+  
+
   
 
 }

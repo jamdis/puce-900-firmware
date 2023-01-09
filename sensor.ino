@@ -1,7 +1,15 @@
 void sensorInit(){
-    bool sensor_ok = sensor.setup(false, false); //initialise sensor
-    bool id_test = sensor.testProductID();
-    uint8_t rev_id = sensor.getRevisionID();
+  bool sensor_ok = sensor.setup(false, false); //initialise sensor
+  bool id_test = sensor.testProductID();
+  uint8_t rev_id = sensor.getRevisionID();
+  
+  sensor.setManualFrameRate(true);
+  sensor.setManualShutter(true);
+  sensor.setShutterMaxBound(0x0010); 
+  sensor.setFramePeriodMinBound(0x0B54); //lowest possible
+  sensor.setFramePeriodMaxBound(0xFFFF);  //highest possible
+
+  
   if( sensor_ok ){
     tPrintln("Sensor OK.");
   }
@@ -17,8 +25,7 @@ void sensorInit(){
   }
   tPrint( " rev: " );
   tPrintln( sensor.getRevisionID() );
-  sensor.setFramePeriodMaxBound(0x12C0);
-  //sensor.setExposure(true, true, 0x2EE0, 0x7E0E, 0x8C20);
+
 }
 
 void readySensor(){
@@ -62,25 +69,26 @@ void updateSensorStatus(){
   ss.suttter_max_bound = sensor.getShutterMaxBound();
 }
 
-void compareAndChangeSensor(){
-  // if (ss.manual_exposure != ui.me_switch){
-  //   sensor.setManualShutter(ui.me_switch);
-  // }
+void setExposure(){
+  sensor.reset(); // seems to prevent perma-busy if we reset before we start changing exposure.
+  sensor.setManualShutter(ui.me_switch); //set auto/manual based upon the position of the switch
+  sensor.setManualFrameRate(ui.me_switch); //same for frame period
 
-  uint16_t new_max_shutter;
-  //'max_shutter' is the max in auto mode, but the actual shutter speed when in manual.
-  //We set it to 0xFFFF here because we want to default to the slowest speed possible.
   if(ui.me_switch){
-    new_max_shutter = map(ui.exposure_pot, 0, 0xFFF, 0, 0xFFFF);
+    //manual mode. set shutter based upon setting on the potentiometer
+    uint16_t set_shutter_to = map( ui.exposure_pot, 0x000, 0xFFF, 0x00, 0xFFFF);
+    sensor.setShutterMaxBound(set_shutter_to);
   }
   else{
-    new_max_shutter = 0xFFFF;
+    //auto mode. set shutter to max to allow full range.
+    sensor.setShutterMaxBound(0xFFFF);
   }
+  //frame period min and max set to widest possible range regardless of manual or auto:
+  sensor.setFramePeriodMinBound(0xB54); //lowest possible
+  sensor.setFramePeriodMaxBound(0xFFFF);//highest possible. Setting this activates the other settings
 
-  //sensor.setExposure(true,ui.me_switch,0x2EE0, 0x0B55, new_max_shutter);
-  
-
-  //sensor.setManualShutter(ui.me_switch);
-  //sensor.setExposure(bool manual_fp, bool manual_shutter, uint16_t frame_period_max, uint16_t frame_period_min, uint16_t shutter_max)
 
 }
+
+
+

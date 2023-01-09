@@ -22,7 +22,7 @@ struct sensor_status{
 };
 sensor_status ss = { false, 0, 0 };
 
-
+uint loops = 0;
 
 char next_filename[12] = "/000001.jpg";
 
@@ -50,6 +50,7 @@ void setup() {
 //------------------Loop---------------------------
 
 void loop() {
+  loops ++;
   //----ui---------
   updateUserInput();
 
@@ -61,7 +62,8 @@ void loop() {
   exposureDump();
   sensor.frameCapture( frame ); // dump frame from sensor
   rotateFrame( SENSOR_ROTATION );
-  compareAndChangeSensor();//compare current status to user input
+  setExposure();//update the exposure settings
+
   
   //----TFT--------
   //draw frame to screen

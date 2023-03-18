@@ -1,7 +1,8 @@
 //--------------------------Config------------------------------------
 #define SCREEN_ROTATION    1
-#define SENSOR_ROTATION    0
+#define SENSOR_ROTATION    3
 #define SHUTTER_COOLDOWN   500
+#define PIXEL_SIZE         4
 
 
 //--------------------------Libraries---------------------------------
@@ -12,17 +13,19 @@
 #include "FS.h" //Filestystem library
 #include "SD.h" //SD card library
 #include <JPEGENC.h> //JPEG Encoder library
+#include <EEPROM.h> //Eeprom library to save persistant data
 
 //--------------------------Pins--------------------------------------
-//for the tft screen
-#define TFT_CS             15
-#define TFT_RST            12
-#define TFT_DC             2
-#define ADNS_PIN_RESET     13        
-#define ADNS_PIN_CS        4
-#define ME_SWITCH          32
-#define SHUTTER_BUTTON     34
-#define EXPOSURE_POT       35
+
+#define TFT_CS             15 //prototype 3B    
+#define TFT_RST            4   //prototype 3B        
+#define TFT_DC             2 //Protoype 3b   
+#define ADNS_PIN_RESET     16 //prototype 3b
+#define ADNS_PIN_CS        17 //prototype 3b           
+
+#define ME_SWITCH          12      
+#define SHUTTER_BUTTON     27       
+#define EXPOSURE_POT       13       
 
 //-------------------------Core Objects--------------------------------
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST); //Create the TFT screen object

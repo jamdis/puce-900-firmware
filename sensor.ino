@@ -3,11 +3,11 @@ void sensorInit(){
   bool id_test = sensor.testProductID();
   uint8_t rev_id = sensor.getRevisionID();
   
-  sensor.setManualFrameRate(true);
-  sensor.setManualShutter(true);
-  sensor.setShutterMaxBound(0x0010); 
-  sensor.setFramePeriodMinBound(0x0B54); //lowest possible
-  sensor.setFramePeriodMaxBound(0xFFFF);  //highest possible
+  // sensor.setManualFrameRate(true);
+  // sensor.setManualShutter(true);
+  // sensor.setShutterMaxBound(0x0010); 
+  // sensor.setFramePeriodMinBound(0x0B54); //lowest possible
+  // sensor.setFramePeriodMaxBound(0xFFFF);  //highest possible
 
   
   if( sensor_ok ){

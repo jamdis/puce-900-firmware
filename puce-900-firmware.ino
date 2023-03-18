@@ -32,13 +32,15 @@ void setup() {
   Serial.begin(500000); //initialise serial
   Serial.println();
 
-  initUserInput();
+  initUserInput(); //set up user interface stuff
   initTFT(); //initialise TFT
   tft.println("_Puce 900_");
   sensorInit();//initialise sensor
   miniSDTest();//test the SD card
-  nextAvailableFileName(); //find the next filename
-  tPrint(next_filename);
+  //nextAvailableFileName(); //find the next filename
+  //tPrint(next_filename);
+  EEPROM.begin(2);
+  ui.shutter_count = EEPROM.read(0);
 
 
   delay(2000);
@@ -63,7 +65,6 @@ void loop() {
   sensor.frameCapture( frame ); // dump frame from sensor
   rotateFrame( SENSOR_ROTATION );
   setExposure();//update the exposure settings
-
   
   //----TFT--------
   //draw frame to screen
@@ -75,8 +76,11 @@ void loop() {
   if( getShutterButton() ){
     //shutter has been pressed. Save JPEG to the SD card
 
-    nextAvailableFileName(); //find the next available filename  
+    fileNameFromNumber(ui.shutter_count);
     saveFrame(frame, next_filename );
+    ui.shutter_count ++;
+    EEPROM.write(0,ui.shutter_count);
+    EEPROM.commit();
   }
   
 

@@ -47,3 +47,20 @@ void exposureDump(){
   Serial.println();
 
 }
+
+class Stopwatch{
+  public:
+    Stopwatch();
+    void start( char* message );
+    void stop();
+    long start_time;
+    char message[126]; 
+  private:
+};
+
+Stopwatch::Stopwatch(){
+}
+
+void Stopwatch::start( char* message ){  
+}
+

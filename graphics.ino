@@ -2,6 +2,7 @@ void initTFT(){
   tft.initR(INITR_BLACKTAB);  //initialise screen
   tft.setRotation(SCREEN_ROTATION); //set screen rotation
   tft.fillScreen(0b100110100001110011); //Background colour. note that red and blue seem to be reversed vs what is on adafruit docs
+  tft.fillScreen(0);
   tft.setTextColor(0xFFFF, 0x0000);
 }
 
@@ -16,7 +17,7 @@ void drawFrameToScreen(){
   for(int x = 0; x < ADNS3080_PIXELS_X; x += 1 ) {
     for(int y = 0; y < ADNS3080_PIXELS_Y; y += 1 ) {
       uint8_t pix_value = frame[x][y];
-      pucePixel(ADNS3080_PIXELS_X - x - 1,y,frame[x][y],4); //flipping horizontally for the screen.  TODO: fix this for real.
+      pucePixel(ADNS3080_PIXELS_X - x - 1,y,frame[x][y],PIXEL_SIZE); //flipping horizontally for the screen.  TODO: fix this for real.
     }
   }
 }

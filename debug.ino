@@ -8,12 +8,22 @@ void tPrint(int message ){
   tft.print(message);
 }
 
+void tPrint(const char* message ){
+  Serial.print(message);
+  tft.print(message);
+}
+
 void tPrintln(char* message ){
   Serial.println(message);
   tft.println(message);
 }
 
 void tPrintln(int message ){
+  Serial.println(message);
+  tft.println(message);
+}
+
+void tPrintln(const char* message ){
   Serial.println(message);
   tft.println(message);
 }

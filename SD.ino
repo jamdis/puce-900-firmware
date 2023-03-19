@@ -70,6 +70,50 @@ void appendFile(fs::FS &fs, const char * path, const char * message){
   file.close();
 }
 
+void listDir(fs::FS &fs, const char * path){
+  File dir = fs.open(path);
+  while (true){
+    File next = dir.openNextFile();
+    if (! next){
+      break; //no more files
+      }
+    tPrintln(next.name());
+  }
+}
+
+uint16_t countImages(fs::FS &fs, const char * path){
+  File dir = fs.open(path);
+  uint16_t count = 0;
+  while (true){
+    File next = dir.openNextFile();
+    if (! next){
+      return count;
+      }
+    
+    if( next.name()[1] != 46 && next.name()[10] == 103){ // only files that do not start with "." and which DO end with "g" as in jpg
+      count ++;
+    }
+  }
+}
+
+const char* getFileNameByCount(fs::FS &fs, const char * path, uint16_t count_no){
+  File dir = fs.open(path);
+  uint16_t count = 0;
+  while (true){
+    File next = dir.openNextFile();
+    if (! next){
+      return ("No files found");
+      }
+    if( next.name()[1] != 46 && next.name()[10] == 103){ // only files that do not start with "." and which DO end with "g" as in jpg
+      if(count == count_no){
+        return next.name();
+      }
+      count ++;
+    }
+  }
+}
+
+
 void deleteFile(fs::FS &fs, const char * path){
   if(!fs.remove(path)){
     tPrintln("Delete failed");

@@ -3,7 +3,7 @@
 #define SENSOR_ROTATION    3
 #define SHUTTER_COOLDOWN   500
 #define PIXEL_SIZE         4
-#define DISP_SCALE         4
+#define DISP_SCALE         3
 
 
 //--------------------------Libraries---------------------------------
@@ -12,7 +12,9 @@
 #include <SPI.h> //SPI library
 #include <ADNS3080.h> //ADNS3080 library
 #include "FS.h" //Filestystem library
-#include "SD.h" //SD card library
+//#include "SD.h" //SD card library
+#include <SD.h>
+
 #include <JPEGENC.h> //JPEG Encoder library
 #include <JPEGDecoder.h> //JPEG Decoder library
 #include <EEPROM.h> //Eeprom library to save persistant data
@@ -29,6 +31,7 @@
 #define SHUTTER_BUTTON     27       
 #define EXPOSURE_POT       13
 #define PLAYBACK_SWITCH    12
+#define VIDEO_MODE_SWITCH  26
 
 //--------------------------CONSTS-------------------------------------
 #define MODE_STILL_CAMERA        0
@@ -41,3 +44,14 @@ Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST); //Create the TFT
 ADNS3080 <ADNS_PIN_RESET, ADNS_PIN_CS> sensor; //Create the ADNS sensor object
 JPEG jpg; //jpeg encoder
 static File myfile; //file system
+
+//-------------------------Class declarations--------------------------------
+class Stopwatch{
+  public:
+    Stopwatch();
+    void start( char* message );
+    void stop();
+    long start_time;
+    char* message; 
+  private:
+};

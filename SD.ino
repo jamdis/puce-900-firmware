@@ -138,3 +138,17 @@ void miniSDTest(){
   tPrintln("");
   //deleteFile(SD, "/card_test.txt");
 }
+
+void oneKTest(fs::FS &fs){
+  File file = fs.open("/oneKTest.txt", FILE_WRITE);
+  if(!file){
+    tPrintln("Failed to open One K file for writing");
+    return;
+  }
+
+  for (int i =0; i< 24000; i++);
+  if(! file.print("?")){
+    tPrintln("Write failed");
+  }
+  file.close();
+}

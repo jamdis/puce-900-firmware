@@ -54,23 +54,29 @@ void exposureDump(){
   dumpVar("shut", sensor.getShutter(), HEX );
   dumpVar("shut_max", sensor.getShutterMaxBound(), HEX );
   dumpVar("Δt", millis() - t );
+  dumpVar("me_switch", ui.me_switch );
   Serial.println();
 
 }
 
-class Stopwatch{
-  public:
-    Stopwatch();
-    void start( char* message );
-    void stop();
-    long start_time;
-    char message[126]; 
-  private:
-};
+
 
 Stopwatch::Stopwatch(){
 }
 
-void Stopwatch::start( char* message ){  
+void Stopwatch::start( char* msg ){
+  message = msg;
+  //Serial.print("Starting ");
+  //Serial.print(message);
+  //Serial.println("...");
+  start_time = millis();
+}
+
+void Stopwatch::stop(){
+  long delta_time = millis() - start_time;
+  Serial.print(message);
+  Serial.print("ΔT:");
+  Serial.print(delta_time);
+  Serial.print("\t");
 }
 

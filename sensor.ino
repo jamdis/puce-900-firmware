@@ -32,9 +32,29 @@ void readySensor(){
   //set SPI stuff so as not to confuse the poor sensor
   //this must be called whenever you switch from using other SPI devices to using the sensor
   //otherwise sensor may read back garbage
-  SPI.setClockDivider( SPI_CLOCK_DIV32 ); 
+  SPI.setClockDivider( SPI_CLOCK_DIV4 ); //this is overclocking past what the ADNS library wants. Seems stable so far...
+  //SPI.setFrequency(4000000);// set speed?
+  
+  
   SPI.setDataMode( SPI_MODE3 );
 }
+
+void scaleBuffer(){
+  uint screen_x_size = ADNS3080_PIXELS_X * DISP_SCALE;
+  uint screen_y_size = ADNS3080_PIXELS_Y * DISP_SCALE;
+  
+  
+  for( int i = 0; i < ADNS3080_PIXELS_X *DISP_SCALE * ADNS3080_PIXELS_Y * DISP_SCALE; i ++){
+    int i_x = i % screen_y_size;
+    int i_y = i / screen_x_size;
+    int buffer_x = i_x / DISP_SCALE;
+    int buffer_y = i_y / DISP_SCALE;
+    
+    screen_buffer[i] = grayToColor( sensor_buffer[ buffer_y * ADNS3080_PIXELS_X + buffer_x ] );
+  }
+
+}
+
 
 void rotateFrame( int x ){
   //rotate frame clockwise in place x times
@@ -43,7 +63,68 @@ void rotateFrame( int x ){
   }
 }
 
-void rotateClockWise(uint8_t arr[ADNS3080_PIXELS_X][ADNS3080_PIXELS_X]){
+void flipBuffer(){
+  uint8_t temp_buffer[ADNS3080_PIXELS_X][ADNS3080_PIXELS_Y];
+  //read into temp buffer while flipping
+  int i = 0;
+  for( int x = 29; x >= 0; x--){
+    for( int y =0; y < 30; y++){
+      temp_buffer[x][y] = sensor_buffer[i];
+      i++;
+    }
+    
+  }
+
+  //read back into sensor buffer
+  i = 0;
+  for( int x = 0; x < 30; x++){
+    for( int y =0; y < 30; y++){
+      sensor_buffer[i] = temp_buffer[x][y];
+      i++;
+    }
+    
+  }
+
+}
+
+
+void rotateBuffer180(){
+  uint8_t temp_buffer[ADNS3080_PIXELS_X * ADNS3080_PIXELS_Y];
+  
+  for (int i = 0; i < ADNS3080_PIXELS_X * ADNS3080_PIXELS_Y; i ++){
+    temp_buffer[i] = sensor_buffer[ADNS3080_PIXELS_X * ADNS3080_PIXELS_Y - i];
+  }
+
+}
+
+void rotateBufferClockwise(){
+  uint8_t temp_buffer[ADNS3080_PIXELS_X][ADNS3080_PIXELS_Y];
+  //read into temp buffer
+  int i = 0;
+  for( int x = 0; x < 30; x++){
+    for( int y =0; y < 30; y++){
+      temp_buffer[x][y] = sensor_buffer[i];
+      i++;
+    }
+    
+  }
+
+  rotateClockWise(temp_buffer); //rotate
+
+  //read back into sensor buffer
+  i = 0;
+  for( int x = 0; x < 30; x++){
+    for( int y =0; y < 30; y++){
+      sensor_buffer[i] = temp_buffer[x][y];
+      i++;
+    }
+    
+  }
+
+}
+
+
+void rotateClockWise(uint8_t arr[ADNS3080_PIXELS_X][ADNS3080_PIXELS_Y]){
   //rotates a frame clockwise in place
    for(int i = 0; i < ADNS3080_PIXELS_X; i++){
       for(int j = 0; j < ADNS3080_PIXELS_X - i; j++){

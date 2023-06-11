@@ -41,6 +41,7 @@ bool saveFrame( uint8_t frame[ADNS3080_PIXELS_X][ADNS3080_PIXELS_Y], const char*
     Serial.println("Unable to access SD Card");
     return false;
   }
+
   //Serial.println("SD card opened");
 
   int i; //counter for main loop.  prefix 'i' used to denote other variables in the outer loop.

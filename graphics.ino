@@ -9,8 +9,22 @@ void initTFT(){
 void readyTFT(){
   //call this to get the screeen ready after using other SPI devices
   //otherwise drawing to the screen will be slow
-  SPI.setClockDivider( SPI_CLOCK_DIV2 );
+  //SPI.setClockDivider( SPI_CLOCK_DIV2 );
+  SPI.setFrequency(80000000);
 }
+
+void dumpToScreen(){
+  
+ 
+  tft.startWrite();
+  tft.setAddrWindow(0, 0, ADNS3080_PIXELS_X * DISP_SCALE, ADNS3080_PIXELS_Y * DISP_SCALE);
+  //digitalWrite(TFT_DC, HIGH);
+  //digitalWrite(TFT_CS, LOW);
+  tft.writePixels(screen_buffer, ADNS3080_PIXELS_X * DISP_SCALE * ADNS3080_PIXELS_Y * DISP_SCALE, true, false);
+  tft.endWrite();
+  //digitalWrite(TFT_CS, HIGH);  
+}
+
 
 void drawFrameToScreen(){
   //Draw frame to screen

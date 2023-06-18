@@ -1,9 +1,10 @@
 //--------------------------Config------------------------------------
-#define SCREEN_ROTATION    1
+#define SCREEN_ROTATION    3
 #define SENSOR_ROTATION    3
 #define SHUTTER_COOLDOWN   500
 #define PIXEL_SIZE         4
 #define DISP_SCALE         3
+#define SCREEN_COLORTAB    INITR_GREENTAB 
 
 
 //--------------------------Libraries---------------------------------
@@ -40,7 +41,8 @@
 
 
 //-------------------------Core Objects--------------------------------
-Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST); //Create the TFT screen object
+SPIClass SPI2(HSPI);
+Adafruit_ST7735 tft = Adafruit_ST7735(&SPI2, TFT_CS, TFT_DC, TFT_RST); //Create the TFT screen object
 ADNS3080 <ADNS_PIN_RESET, ADNS_PIN_CS> sensor; //Create the ADNS sensor object
 JPEG jpg; //jpeg encoder
 static File myfile; //file system

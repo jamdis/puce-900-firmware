@@ -3,25 +3,22 @@ void sensorInit(){
   bool id_test = sensor.testProductID();
   uint8_t rev_id = sensor.getRevisionID();
   
-  // sensor.setManualFrameRate(true);
-  // sensor.setManualShutter(true);
-  // sensor.setShutterMaxBound(0x0010); 
-  // sensor.setFramePeriodMinBound(0x0B54); //lowest possible
-  // sensor.setFramePeriodMaxBound(0xFFFF);  //highest possible
-
   
+
   if( sensor_ok ){
     tPrintln("Sensor OK.");
   }
   else{
     tPrintln("Sensor NOT OK.");
   }
+  tPrint("ID: ");
+  tPrint(sensor.getProductID());
 
   if( id_test ){
    tPrint(" id OK.");
   }
   else{
-    tPrint(" id NOT OK.");
+    tPrintln(" id NOT OK.");
   }
   tPrint( " rev: " );
   tPrintln( sensor.getRevisionID() );
@@ -32,7 +29,7 @@ void readySensor(){
   //set SPI stuff so as not to confuse the poor sensor
   //this must be called whenever you switch from using other SPI devices to using the sensor
   //otherwise sensor may read back garbage
-  SPI.setClockDivider( SPI_CLOCK_DIV4 ); //this is overclocking past what the ADNS library wants. Seems stable so far...
+  SPI.setClockDivider( SPI_CLOCK_DIV16 ); //this is overclocking past what the ADNS library wants. Seems stable so far...
   //SPI.setFrequency(4000000);// set speed?
   
   

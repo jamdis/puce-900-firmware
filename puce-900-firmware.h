@@ -4,7 +4,7 @@
 #define SHUTTER_COOLDOWN   500
 #define PIXEL_SIZE         4
 #define DISP_SCALE         3
-#define SCREEN_COLORTAB    INITR_GREENTAB 
+#define SCREEN_COLORTAB    INITR_BLACKTAB 
 
 
 //--------------------------Libraries---------------------------------

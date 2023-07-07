@@ -1,5 +1,5 @@
 void initTFT(){
-  tft.initR(INITR_GREENTAB);  //initialise screen
+  tft.initR(SCREEN_COLORTAB);  //initialise screen
   tft.setRotation(SCREEN_ROTATION); //set screen rotation
   tft.fillScreen(0b100110100001110011); //Background colour. note that red and blue seem to be reversed vs what is on adafruit docs
   tft.fillScreen(0);

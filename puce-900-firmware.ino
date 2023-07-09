@@ -69,6 +69,8 @@ void setup() {
   initTFT(); //initialise TFT
   tft.println("_Puce 900_");
   sensorInit();//initialise sensor
+  Serial.println("1.0");
+  exposureDump();
   miniSDTest();//test the SD card
   EEPROM.begin(2); //setup eeprom to store the number of pics taken
   ui.shutter_count = EEPROM.read(0);
@@ -81,7 +83,8 @@ void setup() {
   sw.start("OneK_Test");
   oneKTest(SD);
   sw.stop();
-
+  Serial.println("2.0");
+  exposureDump();
 
 }
 
@@ -91,7 +94,9 @@ void loop() {
   loops ++;
     //----ui---------
   updateUserInput();
-
+  //exposureDump();
+  cameraLoop();
+  /*
   if( getPlaybackSwitch() ){
 
 
@@ -107,6 +112,7 @@ void loop() {
   else{
     playbackLoop();
   }
+  */
 }
 
 void videoLoop(){
@@ -187,8 +193,7 @@ void cameraLoop(){
   sw.start("prep TFT");
   readyTFT();
   sw.stop();
-  //drawFrameToScreen();
-  //drawHud();
+  drawHud();
   
   
   // for (int i = 0; i < 900; i++){

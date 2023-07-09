@@ -28,10 +28,10 @@
 #define ADNS_PIN_RESET     16 
 #define ADNS_PIN_CS        17          
 
-#define ME_SWITCH          14      
+#define ME_SWITCH          21      
 #define SHUTTER_BUTTON     27       
-#define EXPOSURE_POT       13
-#define PLAYBACK_SWITCH    12
+#define EXPOSURE_POT       36
+#define PLAYBACK_SWITCH    25
 #define VIDEO_MODE_SWITCH  26
 
 //--------------------------CONSTS-------------------------------------
@@ -44,6 +44,7 @@
 SPIClass SPI2(HSPI);
 Adafruit_ST7735 tft = Adafruit_ST7735(&SPI2, TFT_CS, TFT_DC, TFT_RST); //Create the TFT screen object
 ADNS3080 <ADNS_PIN_RESET, ADNS_PIN_CS> sensor; //Create the ADNS sensor object
+
 JPEG jpg; //jpeg encoder
 static File myfile; //file system
 

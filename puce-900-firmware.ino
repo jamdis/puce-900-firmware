@@ -42,9 +42,15 @@ char next_filename[12] = "/000001.jpg";
 
 //timer
 bool start_frame_signal = false;
+bool late_frame_alarm = false;
 hw_timer_t *Frame_timer = NULL;
+
 void IRAM_ATTR onTimer(){
-  start_frame_signal =true;
+  if(start_frame_signal){
+    //last frame hasn't completed
+    late_frame_alarm = true;
+  }
+  start_frame_signal = true;
 }
 
 Stopwatch sw = Stopwatch();
@@ -55,7 +61,7 @@ Stopwatch sw = Stopwatch();
 void setup() {
   Serial.begin(500000); //initialise serial
   
-  //setup timer
+  //setup timer. this will trigger 24x per second.
   Frame_timer = timerBegin(0, 80, true); //setup timer zero
   timerAttachInterrupt(Frame_timer, &onTimer, true); // attach timer to function
   timerAlarmWrite(Frame_timer, 41666, true); // set timer for every 1/24 second
@@ -95,8 +101,7 @@ void loop() {
     //----ui---------
   updateUserInput();
   //exposureDump();
-  cameraLoop();
-  /*
+  
   if( getPlaybackSwitch() ){
 
 
@@ -112,29 +117,35 @@ void loop() {
   else{
     playbackLoop();
   }
-  */
+  
 }
 
 void videoLoop(){
-  if(start_frame_signal){
-    start_frame_signal = false; //reset the flag
-    sw.start("video frame");
-    //sensor
-    readySensor();
-    updateSensorStatus();
-    sensor.frameCapture( sensor_buffer );
-    flipBuffer();
-    rotateBufferClockwise();
-    setExposure();
-    //tft
-    readyTFT();
-    scaleBuffer();
-    dumpToScreen();
-    sw.stop();
-    Serial.println();
+
+
+  //wait for the next frame
+  while(!start_frame_signal){
+    delayMicroseconds(1);
   }
-
-
+  
+  sw.start("video frame");
+  //sensor
+  readySensor();
+  updateSensorStatus();
+  sensor.frameCapture( sensor_buffer );
+  flipBuffer();
+  rotateBufferClockwise();
+  setExposure();
+  //tft
+  readyTFT();
+  scaleBuffer();
+  dumpToScreen();
+  sw.stop();
+  if(late_frame_alarm){
+    Serial.println("Late Frame!");
+    late_frame_alarm = false;
+  }
+  start_frame_signal = false; //reset the flag
 
 }
 
@@ -176,8 +187,9 @@ void cameraLoop(){
   sw.stop();
 
   
-  sw.start("frame_capture 1d");
-  sensor.frameCapture( sensor_buffer ); // dump frame from sensor
+  sw.start("frame_capture");
+  sensor.frameCapture( sensor_buffer ); // dump frame from sensor to 1-d array
+  sensor.frameCapture( frame ); //dump frame from sensor to 2d array
   sw.stop();
   sw.start("frame_post-processing");
   //rotateFrame( SENSOR_ROTATION );

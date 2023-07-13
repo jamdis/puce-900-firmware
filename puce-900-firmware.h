@@ -2,8 +2,7 @@
 #define SCREEN_ROTATION    3
 #define SENSOR_ROTATION    3
 #define SHUTTER_COOLDOWN   500
-#define PIXEL_SIZE         4
-#define DISP_SCALE         3
+#define DISP_SCALE         4
 #define SCREEN_COLORTAB    INITR_BLACKTAB 
 
 
@@ -35,10 +34,12 @@
 #define VIDEO_MODE_SWITCH  26
 
 //--------------------------CONSTS-------------------------------------
-#define MODE_STILL_CAMERA        0
-#define MODE_VIDEO_CAMERA        1
-#define MODE_PLAYBACK            2
+#define MODE_STILL_CAMERA       0
+#define MODE_VIDEO_CAMERA       1
+#define MODE_PLAYBACK           2
 
+#define TFT_SPI_SPEED           80000000
+#define SENSOR_SPI_SPEED        2962000
 
 //-------------------------Core Objects--------------------------------
 SPIClass SPI2(HSPI);

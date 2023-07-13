@@ -29,6 +29,7 @@ int32_t mySeek(JPEGFILE *p, int32_t position) {
   return f->seek(position);
 }
 
+
 //--------------saveFrame Function-----------------
 //this is what you call when you want to save the current frame as a jpeg.
 
@@ -66,7 +67,7 @@ bool saveFrame( uint8_t frame[ADNS3080_PIXELS_X][ADNS3080_PIXELS_Y], const char*
     return false;
   }
   
-  memset(ucMCU, 0, sizeof(ucMCU)); //fill the current MCU with 0's, thus making it all black
+  memset(ucMCU, 1, sizeof(ucMCU)); //fill the current MCU with 0's, thus making it all black
   iMCUCount = ((width + jpe.cx-1)/ jpe.cx) * ((height + jpe.cy-1) / jpe.cy); //figure out how many MCUs we'll have to get
 
   int x = 0, y = 0; //coordinates in the frame data

@@ -28,19 +28,12 @@ void sensorInit(){
 }
 
 void readySensor(){
-  Serial.println("hello");
   //set SPI stuff so as not to confuse the poor sensor
   //this must be called whenever you switch from using other SPI devices to using the sensor
   //otherwise sensor may read back garbage
-  SPI2.setClockDivider( SPI_CLOCK_DIV8); //Faster than SPI_CLOCK_DIV32 is overclocking past what the ADNS library wants. faster speeds seem stable so far...
+  //SPI2.setClockDivider( SPI_CLOCK_DIV8); //Faster than SPI_CLOCK_DIV32 is overclocking past what the ADNS library wants. faster speeds seem stable so far...
   SPI2.setDataMode( SPI_MODE3 );
-  SPI2.setBitOrder( MSBFIRST );
-  //SPI2.setFrequency(100);// set speed?
-  Serial.print("spi clock speed: ");
-  Serial.println( SPI2.getClockDivider() );
-  
-  
-  
+  SPI2.setFrequency(SENSOR_SPI_SPEED);// set speed
 }
 
 void scaleBuffer(){

@@ -15,3 +15,16 @@ bool getBit( uint8_t number, uint8_t n ) {
   
   return bit;
 }
+
+uint8_t countDigits(int num){
+  //count the number of base 10 digits in a number
+  uint8_t count = 0;
+  while(num)
+  {
+    num = num / 10;
+    count++;
+  }
+  return count;
+}
+
+

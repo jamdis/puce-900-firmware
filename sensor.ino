@@ -154,7 +154,7 @@ void setExposure(){
 
   if(ui.me_switch){
     //manual mode. set shutter based upon setting on the potentiometer
-    uint16_t set_shutter_to = map( ui.exposure_pot, 0x000, 0xFFF, 0x00, 0xFFFF);
+    uint16_t set_shutter_to = map( ui.exposure_period, 0x000, 0xFFF, 0x00, 0xFFFF);
     sensor.setShutterMaxBound(set_shutter_to);
   }
   else{

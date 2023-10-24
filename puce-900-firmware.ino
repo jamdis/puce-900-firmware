@@ -4,6 +4,44 @@
 
 //------------------Globals---------------------------
 
+uint exposure_table[16][2] = {
+  {366, 0xFFFF},
+  {500, 0xBB80},
+  {1000, 0x5DC0},
+  {2000, 0x2EE0},
+  {4000, 0x1770},
+  {8000, 0x0BB8},
+  {16000, 0x05DC},
+  {32000, 0x02EE},
+  {128000, 0x00BC},
+  {256000, 0x05E},
+  {512000, 0x02F},
+  {1024000, 0x017},
+  {2048000, 0x000C},
+  {4096000, 0x0006},
+  {8192000, 0x0003},
+  {16384000, 0x0001},
+};
+
+const char *exposure_pretty[] = {
+  "366",
+  "500",
+  "1000",
+  "2000",
+  "4000",
+  "8000",
+  "16k",
+  "32k",
+  "128k",
+  "256k",
+  "512k",
+  "1m",
+  "2m",
+  "4m",
+  "8m",
+  "16m"
+};
+
 uint8_t test_pattern[16] = 
 {
 0xFF,0   ,0   ,0  ,
@@ -23,6 +61,9 @@ struct user_input {
   bool shutter_button_pressed;
   unsigned long shutter_ready_at;
   uint exposure_pot;
+  uint exposure_index;
+  uint exposure_display;
+  uint exposure_period;
   uint shutter_count;
 };
 user_input ui = {0,0,0,0,0,1};
@@ -34,7 +75,7 @@ struct sensor_status{
 };
 sensor_status ss = { false, 0, 0 };
 
-uint8_t mode = MODE_STILL_CAMERA;
+uint8_t mode = 0;
 
 uint loops = 0;
 
@@ -67,6 +108,10 @@ void setup() {
   timerAlarmWrite(Frame_timer, 41666, true); // set timer for every 1/24 second
   timerAlarmEnable(Frame_timer); //enable it.
   
+  //interrupts for rotary encoder
+
+
+
   Serial.println("PUCE 900");
   setCpuFrequencyMhz(240);
   Serial.print("Clock Speed: ");
@@ -91,6 +136,7 @@ void setup() {
   sw.stop();
   Serial.println("2.0");
   exposureDump();
+  tft.fillScreen(0);
 
 }
 
@@ -100,17 +146,14 @@ void loop() {
   loops ++;
     //----ui---------
   updateUserInput();
-  //exposureDump();
   
   if( getPlaybackSwitch() ){
 
 
     if ( getVideoModeSwitch() ){
-
       videoLoop();
     }
     else{
-      mode = MODE_STILL_CAMERA;
       cameraLoop();
     }
   }
@@ -121,7 +164,13 @@ void loop() {
 }
 
 void videoLoop(){
-
+    if(mode != MODE_VIDEO_CAMERA){
+    //need to init video camera mode
+    tft.fillScreen(0);
+    tft.setCursor(3, 120);
+    tft.print("video mode not yet enabled");
+    mode = MODE_VIDEO_CAMERA;
+  }
 
   //wait for the next frame
   while(!start_frame_signal){
@@ -178,6 +227,14 @@ void playbackLoop(){
 }
 
 void cameraLoop(){
+  
+  if(mode != MODE_STILL_CAMERA){
+    //need to init still camera mode
+    tft.fillScreen(0);
+    setupHud();
+    mode = MODE_STILL_CAMERA;
+  }
+  
   //----Sensor-----
   
   

@@ -3,7 +3,8 @@
 #define SENSOR_ROTATION    3
 #define SHUTTER_COOLDOWN   500
 #define DISP_SCALE         4
-#define SCREEN_COLORTAB    INITR_BLACKTAB 
+#define SCREEN_COLORTAB    INITR_BLACKTAB
+#define ADVANCED_MONITOR   false
 
 
 //--------------------------Libraries---------------------------------
@@ -32,11 +33,15 @@
 #define EXPOSURE_POT       36
 #define PLAYBACK_SWITCH    25
 #define VIDEO_MODE_SWITCH  26
+#define ROTARY_ENCODER_L   22
+#define ROTARY_ENCODER_R   39
+#define ROTARY_ENCODER_B   32
+
 
 //--------------------------CONSTS-------------------------------------
-#define MODE_STILL_CAMERA       0
-#define MODE_VIDEO_CAMERA       1
-#define MODE_PLAYBACK           2
+#define MODE_STILL_CAMERA       1
+#define MODE_VIDEO_CAMERA       2
+#define MODE_PLAYBACK           3
 
 #define TFT_SPI_SPEED           80000000
 #define SENSOR_SPI_SPEED        2962000

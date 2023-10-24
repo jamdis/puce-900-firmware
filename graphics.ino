@@ -19,10 +19,8 @@ void dumpToScreen(){
  
 }
 
+void drawAdvancedMonitor(){
 
-void drawHud(){
-  int old_cursor_x = tft.getCursorX();
-  int old_cursor_y = tft.getCursorY();
   
   tft.setCursor(121,20);
   tft.print("ME:");
@@ -58,9 +56,47 @@ void drawHud(){
 
   barGraph(125,55,10,60,getExpPot(),0xFFFF);
 
+}
 
+void setupHud(){
+  tft.drawRect(125,2,28,24,0xFFFF);
+  tft.setCursor(127,26);
+  tft.print("pics");
 
+  tft.drawRect(125,40,28,24,0xFFFF);
+  tft.setCursor(130,64);
+  tft.print("exp");
+
+}
+
+uint16_t bob = 0;
+
+void drawHud(){
+  int old_cursor_x = tft.getCursorX();
+  int old_cursor_y = tft.getCursorY();
+  if(ADVANCED_MONITOR){
+     drawAdvancedMonitor();
+  }
+  else{
+    int center = 139 - (countDigits( ui.shutter_count ) * 3 );
+    tft.setCursor(center,10);
+    tft.print(ui.shutter_count);
+
+    
+    if(ss.manual_exposure){
+      tft.fillRect(126,41,26,22,0);
+      center = 139 - (sizeof(exposure_pretty[ui.exposure_index]) * 3 );
+      //center = 130;
+      tft.setCursor(center,48);
+      tft.print( exposure_pretty[ui.exposure_index] );
+    }
+    else{
+      tft.setCursor(127,48);
+      tft.print("auto");
+    }
+  }
   tft.setCursor(old_cursor_x, old_cursor_y);
+  bob ++;
 
 }
 

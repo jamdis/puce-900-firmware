@@ -4,6 +4,9 @@
 
 //------------------Globals---------------------------
 
+File avi_file;
+File y4m_file;
+
 uint exposure_table[16][2] = {
   {366, 0xFFFF},
   {500, 0xBB80},
@@ -163,12 +166,18 @@ void loop() {
   
 }
 
+int vid_frames = 0;
 void videoLoop(){
-    if(mode != MODE_VIDEO_CAMERA){
+  if(mode != MODE_VIDEO_CAMERA){
     //need to init video camera mode
     tft.fillScreen(0);
     tft.setCursor(3, 120);
     tft.print("video mode not yet enabled");
+
+    vid_frames = 0;
+    start_y4m("/test.y4m");
+    Serial.println("Started video file!");
+
     mode = MODE_VIDEO_CAMERA;
   }
 
@@ -190,6 +199,16 @@ void videoLoop(){
   scaleBuffer();
   dumpToScreen();
   sw.stop();
+
+  if(vid_frames < 10000){
+    y4m_add_frame();
+    Serial.println("added frame!");
+  }
+  else if(vid_frames == 72){
+    end_y4m();
+  }
+  vid_frames ++;
+
   if(late_frame_alarm){
     Serial.println("Late Frame!");
     late_frame_alarm = false;
@@ -201,6 +220,11 @@ void videoLoop(){
 void playbackLoop(){
   int this_image = 1; //current image slectected, represented as the nth image on the card, ignoring irrelevant files 
   int image_count = countImages(SD, "/");
+
+  Serial.print("There are ");
+  Serial.print(image_count);
+  Serial.println(" images.");
+  /*
   if( mode != MODE_PLAYBACK ){
     
     //we have just now switched into playback mode. Need to set it up.
@@ -224,6 +248,7 @@ void playbackLoop(){
   tft.print (" : ");
   tft.print(getFileNameByCount( SD, "/", this_image) );
   tft.print("                    "); //clear the rest of the row
+  */
 }
 
 void cameraLoop(){

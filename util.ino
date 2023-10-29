@@ -28,3 +28,15 @@ uint8_t countDigits(int num){
 }
 
 
+//
+// Writes an uint32_t in Big Endian at current file position
+//
+static void inline print_quartet(unsigned long i, File fd) {
+
+  uint8_t y[4];
+  y[0] = i % 0x100;
+  y[1] = (i >> 8) % 0x100;
+  y[2] = (i >> 16) % 0x100;
+  y[3] = (i >> 24) % 0x100;
+  size_t i1_err = fd.write(y , 4);
+}

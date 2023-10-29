@@ -89,8 +89,7 @@ uint16_t countImages(fs::FS &fs, const char * path){
     if (! next){
       return count;
       }
-    
-    if( next.name()[1] != 46 && next.name()[10] == 103){ // only files that do not start with "." and which DO end with "g" as in jpg
+    if( next.name()[0] != 46 && next.name()[9] == 103){ // only files that do not start with "." and which DO end with "g" as in jpg
       count ++;
     }
   }
@@ -104,7 +103,7 @@ const char* getFileNameByCount(fs::FS &fs, const char * path, uint16_t count_no)
     if (! next){
       return ("No files found");
       }
-    if( next.name()[1] != 46 && next.name()[10] == 103){ // only files that do not start with "." and which DO end with "g" as in jpg
+    if( next.name()[0] != 46 && next.name()[9] == 103){ // only files that do not start with "." and which DO end with "g" as in jpg
       if(count == count_no){
         return next.name();
       }

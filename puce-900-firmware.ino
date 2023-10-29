@@ -45,6 +45,8 @@ const char *exposure_pretty[] = {
   "16m"
 };
 
+int this_image = 1; //current image slectected for playback, represented as the nth image on the card, ignoring irrelevant files 
+
 uint8_t test_pattern[16] = 
 {
 0xFF,0   ,0   ,0  ,
@@ -218,13 +220,12 @@ void videoLoop(){
 }
 
 void playbackLoop(){
-  int this_image = 1; //current image slectected, represented as the nth image on the card, ignoring irrelevant files 
   int image_count = countImages(SD, "/");
 
   Serial.print("There are ");
   Serial.print(image_count);
   Serial.println(" images.");
-  /*
+
   if( mode != MODE_PLAYBACK ){
     
     //we have just now switched into playback mode. Need to set it up.
@@ -232,15 +233,11 @@ void playbackLoop(){
     tft.fillScreen(0);
     tft.setCursor(10,10);
     tft.println("PLAYBACK MODE");
-    tPrint(image_count);
-    tPrint(getFileNameByCount(SD, "/", 3));
+    this_image = image_count - 1; // start with the last image
     mode = MODE_PLAYBACK;
   }
 
-  this_image = map(ui.exposure_pot, 0, 0xFFF, 0, image_count - 1);
-
-  drawFSJpeg( getFileNameByCount( SD, "/", this_image),0,0 );
-
+  //draw info to screen under image
   tft.setCursor(0, 120);
   tft.print(this_image + 1);
   tft.print(" / ");
@@ -248,7 +245,24 @@ void playbackLoop(){
   tft.print (" : ");
   tft.print(getFileNameByCount( SD, "/", this_image) );
   tft.print("                    "); //clear the rest of the row
-  */
+
+  //draw image
+  String image_filename = String( "/" + String( getFileNameByCount( SD, "/", this_image)) ); //surprisingly complex line of code just to add leading "/" 
+  drawFSJpeg( image_filename.c_str(), 0 , 0 );
+
+  //stall waiting for next shutter button press or switch out of playback.  This is a hack and should be fixed by making shutter button an interrupt.
+  while ( digitalRead( SHUTTER_BUTTON ) &&  digitalRead(PLAYBACK_SWITCH) ){ } 
+  this_image --;
+  if(this_image < 0){
+    this_image = image_count - 1;
+  }
+  Serial.println("GOING PREVIOUS IMAGE!!!!!");
+  
+
+  
+
+  
+
 }
 
 void cameraLoop(){

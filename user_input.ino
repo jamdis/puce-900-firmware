@@ -26,7 +26,7 @@ void rotaryR(){
 
 void updateUserInput(){
   ui.me_switch = digitalRead( ME_SWITCH ); //what does the ME switch say?
-  ui.playback_switch =  digitalRead(PLAYBACK_SWITCH);
+  ui.playback_switch =  !digitalRead(PLAYBACK_SWITCH); //invert because of labelling on case
   ui.video_mode_switch = digitalRead(VIDEO_MODE_SWITCH);
   ui.shutter_button_down = !digitalRead( SHUTTER_BUTTON ) ; //invert input because pullup.
   ui.shutter_button_pressed = false;
